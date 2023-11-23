@@ -9,6 +9,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Create local copy of main branch
+        run: git fetch origin main:main
       - name: Get Changesets
         id: get-changed-packages
         uses: caffco/changed-packages-github-action@v0.0.8
