@@ -1,0 +1,22 @@
+name: Lint
+on: push
+jobs:
+  check-changesets:
+    name: Check Changesets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get Changesets
+        id: get-changed-packages
+        uses: caffco/changed-packages-github-action@v0.0.8
+        with:
+          base_branch: main
+          repository_path: .
+      - name: Log changed packages without changeset
+        if: ${{ steps.get-changed-packages.outputs.all_changed_packages_have_changeset == 'false' }}
+        run: |
+          echo '::error ::Some changed packages are missing in your changesets' ${{ join( steps.get-changed-packages.outputs.changed_packages_without_changeset ) }}
+          exit 1
